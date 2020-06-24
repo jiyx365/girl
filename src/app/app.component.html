@@ -1,0 +1,27 @@
+<ion-app>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>无敌美少女</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content *ngIf="res">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <ion-list>
+      <ion-card *ngFor="let item of res.result">
+        <ion-img [src]="item.img"></ion-img>
+      </ion-card>
+    </ion-list>
+
+    <ion-infinite-scroll threshold="200px" (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="lines"
+        loadingText="加载中..."
+      >
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </ion-content>
+</ion-app>

@@ -1,0 +1,61 @@
+<!-- 网络请求: 必须在 app.module.ts 中注入模块 -->
+<ion-app>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>商品列表</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- 如果请求结果 res 有值, 再渲染.  防止后台爆红 -->
+  <ion-content *ngIf="res">
+    <!-- 下拉刷新 -->
+    <!-- i-refresh -->
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <!-- list: 列表.  专门存放一列内容 -->
+    <ion-list>
+      <!-- lines='full' 下划线左侧顶到头 -->
+      <ion-item *ngFor="let item of res.data" lines="full">
+        <!-- thumbnail缩略图组件, 可以把内部图片缩小 -->
+        <ion-thumbnail slot="start">
+          <!-- 通过观察请求返回值, 确定图片地址需要拼接域名 -->
+          <ion-img [src]="'http://101.96.128.94:9999/' + item.pic"></ion-img>
+        </ion-thumbnail>
+        <!-- label: 类似于div -->
+        <ion-label class="content">
+          <!-- text: 类似于span -->
+          <!-- ion-text: 普通单行显示文本,超长自动截断 -->
+          <!-- ion-label: 单行文本, 自动省略号 -->
+          <ion-label>{{ item.title }}</ion-label>
+          <ion-text class="price">¥{{ item.price }}</ion-text>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <!-- i-infinite-scroll -->
+    <!-- 
+      触底操作的触发 有提前量:  将要触底时触发,提前加载下一页的数据.
+      用户体验会更好.  这个提前量可以设定
+      threshold="20px"
+      代表距离底部20px 时触发触底操作
+
+      threshold="20%"
+      代表: 距离底部还有屏幕高度20%的时候 触发触底操作
+     -->
+
+    <!-- disabled: 无效的.   如果是最后一页, 则加载更多操作无效  -->
+    <ion-infinite-scroll
+      treshold="100px"
+      (ionInfinite)="loadData($event)"
+      [disabled]="res.pno == res.pageCount"
+    >
+      <ion-infinite-scroll-content
+        loadingSpinner="dots"
+        loadingText="加载中..."
+      >
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </ion-content>
+</ion-app>
